@@ -79,6 +79,16 @@ end
 post "/rsvps/:id/update" do
     puts "params: #{params}"
 
+    # first find the rsvp that we're editing
+    @rsvp = rsvps_table.where(id: params[:id]).to_a[0]
+    # find relevant event based on RSVP event_id
+    @event = events_table.where(id: @rsvp[:event_id]).to_a[0]
+    # next we want to update rsvps table with the rsvp edited data
+    rsvps_table.where(id: params["id"]).update(
+        comments: params["comments"],
+        going: params["going"]
+    )
+
     view "update_rsvp"
 end
 
